@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Projekt_ISS.Models
 {
@@ -8,7 +9,10 @@ namespace Projekt_ISS.Models
         public int Id { get; set; }
 
         [Required]
-        public string? Name { get; set; }
+        public string? FirstName { get; set; }
+
+        [Required]
+        public string? LastName { get; set; }
 
         [Required]
         public string? Email { get; set; }
@@ -18,5 +22,7 @@ namespace Projekt_ISS.Models
 
         [Required]
         public string? Role { get; set; }
+
+        public string? ProfileDocument { get; set; }
     }
 }
