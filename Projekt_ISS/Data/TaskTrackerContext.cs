@@ -12,7 +12,7 @@
 
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Models.Task> Tasks { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Deadline> Deadlines { get; set; }
     }
