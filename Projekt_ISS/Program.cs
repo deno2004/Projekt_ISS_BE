@@ -8,14 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
-// 1️⃣ Add SQLite Database
+builder.Services.AddControllers();
 builder.Services.AddDbContext<TaskTrackerContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("tasktracker.db")));
 
-// 2️⃣ Configure JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
-
+// JWT Authentication
+var key = Encoding.ASCII.GetBytes("YourSuperSecretKey12345");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -25,10 +23,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"]
         };
     });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
 
 // 3️⃣ Add Controllers
 builder.Services.AddControllers();
@@ -43,6 +47,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseCors("AllowAll");
 
 // 4️⃣ Enable Authentication & Authorization Middleware
 app.UseAuthentication();
